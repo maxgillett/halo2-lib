@@ -832,4 +832,26 @@ impl<F: ScalarField> GateInstructions<F> for FlexGateConfig<F> {
         }
         bit_cells
     }
+
+    fn invert<'v>(
+        &self,
+        ctx: &mut Context<'_, F>,
+        a: QuantumCell<'_, 'v, F>,
+    ) -> AssignedValue<'v, F> {
+        let zero = F::zero();
+        let one = F::one();
+        let b = a.value().map(|x| x.invert().unwrap_or(zero));
+        let c = a.value().zip(b).map(|(av, bv)| one - *av * bv);
+        // constrain a * c == 0
+        let cells: Vec<QuantumCell<F>> =
+            vec![Constant(F::from(0)), a.clone(), Witness(c.clone()), Constant(F::from(0))];
+        let assigned_cells = self.assign_region_smart(ctx, cells, vec![0], vec![], vec![]);
+        let c = &assigned_cells[2];
+        // constrain a * b + c == 1
+        let cells: Vec<QuantumCell<F>> =
+            vec![Existing(c), a.clone(), Witness(b.clone()), Constant(one)];
+        let assigned_cells = self.assign_region_smart(ctx, cells, vec![0], vec![], vec![]);
+        let inv = assigned_cells[2].clone();
+        inv
+    }
 }

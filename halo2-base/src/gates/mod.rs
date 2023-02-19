@@ -657,6 +657,12 @@ pub trait GateInstructions<F: ScalarField> {
         let out = self.mul(ctx, Existing(&eval.unwrap()), Existing(&z));
         (out, z)
     }
+
+    fn invert<'v>(
+        &self,
+        ctx: &mut Context<'_, F>,
+        a: QuantumCell<'_, 'v, F>,
+    ) -> AssignedValue<'v, F>;
 }
 
 pub trait RangeInstructions<F: ScalarField> {

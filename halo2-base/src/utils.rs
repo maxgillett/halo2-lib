@@ -258,12 +258,12 @@ pub fn compose(input: Vec<BigUint>, bit_len: usize) -> BigUint {
 #[cfg(test)]
 #[test]
 fn test_signed_roundtrip() {
-    use crate::halo2_proofs::halo2curves::bn256::Fr;
+    use crate::halo2_proofs::curves::bn256::Fr;
     assert_eq!(fe_to_bigint(&bigint_to_fe::<Fr>(&-BigInt::one())), -BigInt::one());
 }
 
 #[cfg(feature = "halo2-axiom")]
-pub use halo2_proofs_axiom::halo2curves::CurveAffineExt;
+pub use halo2_proofs_axiom::curves::CurveAffineExt;
 
 #[cfg(feature = "halo2-pse")]
 pub trait CurveAffineExt: CurveAffine {
@@ -284,11 +284,14 @@ pub mod fs {
     };
 
     use crate::halo2_proofs::{
-        halo2curves::{
+        curves::{
             bn256::{Bn256, G1Affine},
             CurveAffine,
         },
-        poly::{commitment::{Params, ParamsProver}, kzg::commitment::ParamsKZG},
+        poly::{
+            commitment::{Params, ParamsProver},
+            kzg::commitment::ParamsKZG,
+        },
     };
     use rand_chacha::{rand_core::SeedableRng, ChaCha20Rng};
 

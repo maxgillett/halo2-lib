@@ -41,7 +41,6 @@ use std::{cell::RefCell, rc::Rc};
 use utils::ScalarField;
 
 pub mod gates;
-// pub mod hashes;
 pub mod utils;
 
 #[cfg(feature = "halo2-axiom")]
